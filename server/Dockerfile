@@ -5,15 +5,15 @@ FROM node:18-alpine
 WORKDIR /app
 
 # Copy package.json and package-lock.json
-COPY package.json ./
+COPY ./server/package*.json ./
 
-COPY .env.template .env
+COPY ./server/.env.template ./.env
 
 # Install app dependencies
 RUN npm install
 
 # Bundle app source
-COPY . .
+COPY ./server .
 
 # Expose port 8080
 EXPOSE 8080
