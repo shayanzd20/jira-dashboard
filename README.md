@@ -4,6 +4,10 @@
 #### 🏃‍♂️ Running the Project
 Before running the project, ensure that Docker is installed and running on your machine. The following command will use Docker Compose to handle the backend, frontend, and MySQL:
 
+first build images
+- `docker-compose build --no-cache`
+
+then run images
 - `docker-compose up -d`
 
 #### 🚀 open up the project
