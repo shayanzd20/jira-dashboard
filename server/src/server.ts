@@ -34,8 +34,7 @@ const sequelize = new Sequelize({
     database: process.env.DB_NAME || 'kanban',
     username: process.env.DB_USER || 'root',
     password: process.env.DB_PASS || 'password',
-    host: "localhost",
-    // host: process.env.DB_HOST || 'mysql',
+    host: process.env.DB_HOST || 'mysql',
     dialect: 'mysql',
     models: models
 });

@@ -9,6 +9,7 @@ services:
       - "8080:8080"
     volumes:
       - ./server:/app
+      - /app/node_modules     # Exclude node_modules from being overwritten
     environment:
       - NODE_ENV=development
       - DB_HOST=mysql
@@ -25,6 +26,7 @@ services:
       - "3000:3000"
     volumes:
       - ./client:/app
+      - /app/node_modules     # Exclude node_modules from being overwritten
     environment:
       - NODE_ENV=development
     depends_on:
