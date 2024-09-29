@@ -24,7 +24,7 @@ router.get('/', async (req: Request, res: Response) => {
                 [{ model: KanbanColumn, as: 'columns' }, 'position', 'ASC'], 
                 [{ model: KanbanColumn, as: 'columns' }, { model: KanbanCase, as: 'cases' }, 'position', 'ASC'],
             ],
-            logging: console.log, // Log the SQL query for debugging
+            logging: process.env.NODE_ENV === 'development' ? console.log : false, 
         });
 
         res.json(projects[0]);
@@ -53,9 +53,12 @@ router.post('/', async (req: Request, res: Response) => {
                     order: [['position', 'ASC']],
                 }
             ],
-            logging: console.log, // This logs the raw SQL query for debugging
+            logging: process.env.NODE_ENV === 'development' ? console.log : false, 
         });
         
+
+        // other alternative that I found is to use bulkCreate to avoid mutiple queries to the data base 
+        // we should always refactore our code base to optimize it
 
         if (project) {
             await project.update({ name });
@@ -84,22 +87,7 @@ router.post('/', async (req: Request, res: Response) => {
                 }
             }
 
-            project = await Project.findByPk(projectId, {
-                include: [
-                    {
-                        model: KanbanColumn,
-                        include: [
-                            {
-                                model: KanbanCase,
-                                order: [['position', 'ASC']],
-                            }
-                        ],
-                        order: [['position', 'ASC']],
-                    }
-                ],
-            });
 
-            res.json(project);
         } else {
 
             project = await Project.create(
@@ -114,24 +102,24 @@ router.post('/', async (req: Request, res: Response) => {
                     await KanbanCase.create({ ...caseData, columnId: columnData.columnId });
                 }
             }
-
-            project = await Project.findByPk(projectId, {
-                include: [
-                    {
-                        model: KanbanColumn,
-                        include: [
-                            {
-                                model: KanbanCase,
-                                order: [['position', 'ASC']], // Order cases by position
-                            }
-                        ],
-                        order: [['position', 'ASC']], // Order columns by position
-                    }
-                ]
-            });
-            
-            res.json(project);
         }
+
+        project = await Project.findByPk(projectId, {
+            include: [
+                {
+                    model: KanbanColumn,
+                    include: [
+                        {
+                            model: KanbanCase,
+                            order: [['position', 'ASC']],
+                        }
+                    ],
+                    order: [['position', 'ASC']],
+                }
+            ],
+        });
+
+        res.json(project);
     } catch (err) {
         console.log('err :>> ', err);
         res.status(500).json({ error: 'Failed to create project' });
@@ -191,3 +179,28 @@ router.delete('/:id', async (req: Request, res: Response) => {
 });
 
 export default router;
+
+/**
+ *
+ * Hey there! 👋
+ *
+ * If you've stumbled upon this hidden gem, congratulations! 🎉
+ * Building this application was a labor of love.
+ *
+ * Here are the important principles that we should always use:
+ * 1. Make cool things. Do not implement the same code that u did at ur previous job. That code is boring, and u are not.
+ *    Look look for new frameworks/libraries/icons/animations and use them
+ *
+ * 2. Refactor the code every 3-6 month. If you follow the 1st principle, u become cooler with a new day, and the code
+ *    u wrote 3 months ago is already a pile of garbage. So refactor it and make it at least 2x faster
+ *
+ * 3. Do u know the 80-20 rule? Where 20% of effort yeilds 80% of output. Be 10x developer and focus only on the important parts
+ *    that define fridge app. Making a thing work is better than making a thing pefect.
+ *
+ * Remember, code is a form of communication. Write it as if you're explaining your thoughts to the next person who will take over your work.
+ * And finally, always have fun and stay curious. The joy of coding is in the journey, not just the destination.
+ *
+ * Happy coding! 🚀
+ *
+ * - Shayan Zeinali
+ */

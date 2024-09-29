@@ -29,12 +29,13 @@ app.use(helmet());
 // app.use(rateLimiter);
 
 // MySQL connection using Sequelize
-console.log('process.env :>> ', process.env);
+//   =========>>> it can be also in the seperate config folder
 const sequelize = new Sequelize({
     database: process.env.DB_NAME || 'kanban',
     username: process.env.DB_USER || 'root',
     password: process.env.DB_PASS || 'password',
-    host: process.env.DB_HOST || 'mysql',
+    host: "localhost",
+    // host: process.env.DB_HOST || 'mysql',
     dialect: 'mysql',
     models: models
 });
@@ -43,14 +44,13 @@ sequelize.authenticate()
     .then(() => console.log('MySQL Connected'))
     .catch(err => console.error('Connection error: ', err));
 
-// Request logging
+// Request logging ==> we can use it for logging purpose 
 // app.use(requestLogger);
 
 // Routes
 
-// for versioning
 app.use("/health-check", healthCheckRouter);
-app.use('/api/v1/project', projectRoutes);
+app.use('/api/v1/project', projectRoutes); // for versioning
 
 // Swagger UI
 app.use(openAPIRouter);
