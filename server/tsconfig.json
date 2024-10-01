@@ -7,7 +7,7 @@
       "@/*": ["src/*"]
     },
     "moduleResolution": "Node",
-    "outDir": "dist",
+    "outDir": "./dist",
     "importsNotUsedAsValues": "remove",
     "strict": true,
     "esModuleInterop": true,
