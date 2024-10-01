@@ -17,6 +17,12 @@ services:
       - mysql
     networks:
       - app-network
+    restart: on-failure
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
 
   client:
     build:
